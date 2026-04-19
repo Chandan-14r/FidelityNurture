@@ -1,94 +1,112 @@
 # 💰 NurtureFolio
 
-**AI-Powered Portfolio Intelligence Platform** — Analyze, optimize, and monitor your investments with machine learning.
+**AI-Powered Portfolio Intelligence Platform** — Analyze, optimize, and stress-test your investments with constraint-based machine learning.
 
 Built for investors who want **data-driven insights** without the complexity of Bloomberg terminals.
 
 ---
 
-## ✨ Features
+## ✨ What Makes This Different
 
-### 📊 Portfolio Analysis
-- **Health Scoring** — A+ to F grade based on diversification, risk, performance & concentration
-- **Sector Breakdown** — Visual allocation across sectors, asset types, and holdings
-- **Concentration Detection** — Herfindahl-Hirschman Index for portfolio concentration
+### 🧠 Constraint-Based Rebalancing (Not Stupid Optimization)
+Other tools say: "SELL 37% → 2.9%" ❌  
+NurtureFolio says: "Gradually trim 37% → 26.6%" ✅
 
-### 🤖 AI Risk Engine
-- **Volatility Estimation** — Annualized portfolio volatility using asset-weighted models
-- **Max Drawdown Prediction** — Estimate worst-case scenarios
-- **Beta & Sharpe Calculation** — Risk-adjusted return metrics
-- **Anomaly Detection** — Auto-detect overweight sectors, single-stock risk, performance outliers
+Real portfolio managers use **constraints**:
+- Max single asset: 20%
+- Max reduction per rebalance: 30%
+- Core funds preserved (never eliminated)
+- Only act if weight differs by >5%
 
-### 🎯 Portfolio Optimization
-- **Max Sharpe** — Optimize for best risk-adjusted returns
-- **Equal Weight** — Simple equal-weight rebalancing
-- **Defensive** — Minimize drawdown risk with bond allocation
-- **Momentum** — Tilt toward recent winners
+### 📊 Mean-Variance Optimization (Modern Portfolio Theory)
+```
+max_w (w^T * μ - λ * w^T * Σ * w)
+```
+Where λ = risk aversion, with added penalties for concentration and sector imbalance.
 
-### 🖥️ Terminal Dashboard
-- Beautiful colored terminal output with bar charts
-- Holdings table with P&L and weights
-- Health score gauges
-- Actionable recommendations
+### 🎭 Scenario Simulation
+Stress-test your portfolio against:
+- 2008 Financial Crisis
+- COVID-19 Crash
+- Tech Bubble Burst
+- Interest Rate Hikes
+- Black Swan Events
+- **Monte Carlo** (1000 random simulations)
 
 ---
 
 ## 🚀 Quick Start
 
 ```bash
-# Clone the repo
 git clone https://github.com/Chandan-14r/FidelityNurture.git
 cd FidelityNurture
-
-# Run the demo (no dependencies needed!)
-python -m fidelity_nurture
+python3 -m fidelity_nurture
 ```
 
-### Other Commands
+### Commands
 
 ```bash
-python -m fidelity_nurture analyze    # Health score & recommendations
-python -m fidelity_nurture risk       # Risk assessment & anomalies
-python -m fidelity_nurture optimize   # All optimization strategies
-python -m fidelity_nurture json       # Export analysis as JSON
+# Full terminal dashboard
+python3 -m fidelity_nurture
+
+# Health analysis
+python3 -m fidelity_nurture analyze
+
+# Risk assessment + anomalies
+python3 -m fidelity_nurture risk
+
+# Smart rebalance (constraint-based, recommended)
+python3 -m fidelity_nurture optimize
+
+# Mean-Variance Optimization
+python3 -m fidelity_nurture optimize --strategy maximize_sharpe
+
+# Different risk tolerances
+python3 -m fidelity_nurture optimize --risk conservative
+python3 -m fidelity_nurture optimize --risk aggressive
+
+# Scenario simulations
+python3 -m fidelity_nurture simulate                           # List all scenarios
+python3 -m fidelity_nurture simulate --scenario crash_2008     # 2008 crash
+python3 -m fidelity_nurture simulate --monte-carlo             # 1000 random sims
+
+# Export as JSON
+python3 -m fidelity_nurture json
 ```
 
 ---
 
 ## 📸 Sample Output
 
+### Smart Rebalance (No Extreme Moves)
 ```
-══════════════════════════════════════════════════════════════════════
-  💰 NurtureFolio — AI Portfolio Intelligence
-  Portfolio: Fidelity Growth Portfolio
-══════════════════════════════════════════════════════════════════════
+🎯 Smart Rebalance (moderate)
+========================================
+  Expected Return: 8.5%
+  Expected Risk: 6.5%
+  Sharpe Ratio: 0.535
 
-📊 PORTFOLIO OVERVIEW
-  ┌─────────────────────────────────────────┐
-  │  Total Value:         $32,847.60        │
-  │  Cost Basis:          $25,530.00        │
-  │  Unrealized P&L:      +$7,317.60        │
-  │  Return:               +28.66%          │
-  │  Holdings:                    12        │
-  │  Cash:                $5,000.00         │
-  └─────────────────────────────────────────┘
+  Suggested Changes:
+    🔴 SELL FXAIX  37.1% → 26.6% ($5,465)
+       └─ Overweight at 37.1% — trimming to 26.6% (max: 20%)
+```
 
-🏥 PORTFOLIO HEALTH
-  Overall:        B+ (72/100)
-  Diversification:████████░░ 78
-  Risk Mgmt:      ███████░░░ 68
-  Performance:    █████████░ 95
-  Concentration:  ███████░░░ 65
+### Monte Carlo Simulation
+```
+🎲 Running Monte Carlo (1000 iterations)...
+  Mean Return: 6.15%
+  Worst Case: -28.82%
+  Best Case: +44.22%
+  Probability of Gain: 71.0%
+  Probability of 20%+ Loss: 1.0%
+```
 
-⚠️  RISK ASSESSMENT
-  Risk Level:     MODERATE (48/100)
-  Volatility:     14.2% annualized
-  Sharpe Ratio:   1.67
-  Portfolio Beta:  1.08
-
-🔍 ANOMALIES
-  ⚠️ [WARNING] Technology sector is 42.1% — overweight
-    → Reduce tech exposure below 30%
+### 2008 Crisis Scenario
+```
+🎭 2008 Financial Crisis
+  Portfolio Impact: -$17,828 (-34.4%)
+  Worst: V (-46.9%)
+  Best:  FBND (+8.0%)  ← Bonds protect you
 ```
 
 ---
@@ -98,57 +116,60 @@ python -m fidelity_nurture json       # Export analysis as JSON
 ```
 fidelity_nurture/
 ├── core/
-│   ├── portfolio.py      # Portfolio & Holding data models
-│   └── analyzer.py       # Health scoring & diversification analysis
+│   ├── portfolio.py      # Portfolio & Holding models
+│   └── analyzer.py       # Health scoring & diversification
 ├── ai/
 │   ├── predictor.py      # Risk prediction & anomaly detection
-│   └── optimizer.py      # Portfolio optimization strategies
+│   ├── optimizer.py      # Constraint-based optimization (5 strategies)
+│   └── simulator.py      # Scenario & Monte Carlo simulation
 ├── data/
-│   └── market.py         # Market data provider (extensible)
+│   └── market.py         # Market data (simulated + yfinance ready)
 ├── ui/
 │   └── dashboard.py      # Terminal visualization
-├── __init__.py
-├── __main__.py           # CLI entry point
+├── __main__.py           # CLI with argparse
 tests/
-└── test_core.py          # Test suite
+└── test_core.py          # 13 tests
 ```
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Tests
 
 ```bash
-python tests/test_core.py
+python3 tests/test_core.py
+# 🧪 Running 13 tests...
+# 🎉 All tests passed!
 ```
 
 ---
 
-## 🔧 Extending
+## 🔧 Use Your Own Portfolio
 
-### Add Your Own Portfolio
-
+### Python API
 ```python
-from fidelity_nurture.core.portfolio import Portfolio, Holding
+from fidelity_nurture import Portfolio, Holding, PortfolioOptimizer, Constraints
 
 portfolio = Portfolio(name="My Portfolio")
 portfolio.add_holding(Holding(
-    symbol="VOO",
-    name="Vanguard S&P 500 ETF",
-    shares=25.0,
-    avg_cost=420.00,
-    current_price=475.30,
-    sector="Large Cap",
-    asset_type="etf",
+    symbol="VOO", name="Vanguard S&P 500 ETF",
+    shares=25.0, avg_cost=420.00, current_price=475.30,
+    sector="Large Cap", asset_type="etf",
 ))
 
-from fidelity_nurture.ui.dashboard import Dashboard
-print(Dashboard(portfolio).render())
+# With constraints
+constraints = Constraints(
+    max_single_asset=0.20,
+    max_single_asset_sell_pct=0.30,
+    min_bonds=0.15,
+)
+
+optimizer = PortfolioOptimizer(portfolio, constraints)
+result = optimizer.optimize(strategy="smart_rebalance")
 ```
 
-### Load from CSV
-
-```python
-portfolio = Portfolio.from_csv("my_holdings.csv", name="My Portfolio")
+### From CSV
+```bash
+python3 -m fidelity_nurture --portfolio my_holdings.csv --name "My Portfolio"
 ```
 
 CSV format:
@@ -158,46 +179,36 @@ AAPL,Apple Inc.,10,150.00,198.50,Technology,stock
 FBND,Fidelity Total Bond ETF,80,45.00,44.20,Fixed Income,bond
 ```
 
-### Integrate Real Market Data
-
-Extend `MarketDataProvider` to use:
-- **yfinance** — `pip install yfinance`
-- **Alpha Vantage** — Free API key
-- **IEX Cloud** — Real-time quotes
-
 ---
 
 ## 📋 Roadmap
 
 - [x] Portfolio management & health scoring
-- [x] AI risk prediction & anomaly detection
-- [x] Multiple optimization strategies
-- [x] Terminal dashboard with visualizations
-- [ ] Real market data integration (yfinance)
+- [x] Constraint-based rebalancing (realistic)
+- [x] Mean-Variance Optimization
+- [x] Risk penalties & multi-objective scoring
+- [x] Scenario simulation (8 predefined + custom)
+- [x] Monte Carlo simulation (1000 iterations)
+- [x] Terminal dashboard
+- [ ] Real market data (yfinance integration)
 - [ ] Historical backtesting engine
-- [ ] Web dashboard (Streamlit/Gradio)
-- [ ] Tax-loss harvesting suggestions
-- [ ] Dividend tracking & yield analysis
-- [ ] Monte Carlo simulation for retirement planning
-- [ ] Telegram/Discord alerts for portfolio changes
+- [ ] Efficient frontier visualization
+- [ ] Tax-loss harvesting
+- [ ] Dividend tracking
+- [ ] Web dashboard (Streamlit)
+- [ ] Telegram/Discord alerts
 
 ---
 
 ## 🤝 Contributing
 
-Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
-
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/amazing`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing`)
-5. Open a Pull Request
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT — see [LICENSE](LICENSE).
 
 ---
 
@@ -205,7 +216,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 **Chandan** — AI Engineer & Full-Stack Developer
 - GitHub: [@Chandan-14r](https://github.com/Chandan-14r)
-- LinkedIn: [Chandan R.S](https://linkedin.com/in/chandan-rs)
 
 ---
 
